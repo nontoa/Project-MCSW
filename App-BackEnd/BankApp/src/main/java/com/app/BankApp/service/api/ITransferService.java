@@ -8,5 +8,5 @@ public interface ITransferService {
 
     List<Transfer> getAllTransfersByUserId(String userId);
 
-    void doTransfer(Transfer transfer);
+    String doTransfer(Transfer transfer);
 }

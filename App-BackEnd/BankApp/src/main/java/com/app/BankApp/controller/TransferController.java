@@ -25,8 +25,11 @@ public class TransferController {
     @PostMapping
     public ResponseEntity<String> doTransfer(@RequestBody Transfer transfer){
 
-        transferService.doTransfer(transfer);
-        return new ResponseEntity<>("Transfer completed successfully", HttpStatus.OK);
+        String response = transferService.doTransfer(transfer);
+        if (response.equals("There was an exception")){
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

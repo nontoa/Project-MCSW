@@ -1,12 +1,17 @@
 package com.app.BankApp.controller;
 
 import com.app.BankApp.dto.UserBank;
+import com.app.BankApp.dto.UserBankResponseDto;
 import com.app.BankApp.dto.ValidateUserDto;
+import com.app.BankApp.dto.ValidateUserResponseDto;
 import com.app.BankApp.service.api.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("users")
@@ -16,13 +21,21 @@ public class UserController {
     IUserService userService;
 
     @PostMapping("/authentication")
-    public ResponseEntity<String> validateUser(@RequestBody ValidateUserDto user){
+    public ResponseEntity<ValidateUserResponseDto> validateUser(@RequestBody ValidateUserDto user){
 
-        var validUser = userService.isValidUser(user);
-        if (validUser) {
-            return new ResponseEntity<>("Valid", HttpStatus.OK);
+        var profileUser = userService.isValidUser(user);
+        if (Objects.nonNull(profileUser)) {
+            return new ResponseEntity<>(ValidateUserResponseDto
+                    .builder()
+                    .authentication("Valid")
+                    .rol(profileUser)
+                    .build(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Invalid", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ValidateUserResponseDto
+                    .builder()
+                    .authentication("Invalid")
+                    .rol(null)
+                    .build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -37,5 +50,11 @@ public class UserController {
     public ResponseEntity<String> getTotalBalance(@PathVariable String userId){
 
         return new ResponseEntity<>(userService.getTotalBalance(userId), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserBankResponseDto>> getAllUsers() {
+
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 }

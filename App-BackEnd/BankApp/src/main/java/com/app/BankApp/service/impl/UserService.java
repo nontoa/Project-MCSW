@@ -1,8 +1,8 @@
 package com.app.BankApp.service.impl;
 
 import com.app.BankApp.configuration.DatabaseConnection;
-import com.app.BankApp.dto.Transfer;
 import com.app.BankApp.dto.UserBank;
+import com.app.BankApp.dto.UserBankResponseDto;
 import com.app.BankApp.dto.ValidateUserDto;
 import com.app.BankApp.service.api.IAccountService;
 import com.app.BankApp.service.api.IUserService;
@@ -35,7 +35,7 @@ public class UserService implements IUserService {
 
 
     @Override
-    public Boolean isValidUser(ValidateUserDto user) {
+    public String isValidUser(ValidateUserDto user) {
 
         try{
             connection = databaseConnection.connect();
@@ -44,14 +44,8 @@ public class UserService implements IUserService {
             stmt.setString(1,user.getUserName());
             stmt.setString(2,user.getPassword());
             rs = stmt.executeQuery();
-            int rowCount = 0;
             while (rs.next()) {
-                rowCount++;
-            }
-            if (rowCount > 0){
-                return Boolean.TRUE;
-            } else {
-                return Boolean.FALSE;
+                return rs.getString("profile");
             }
         }catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -59,7 +53,7 @@ public class UserService implements IUserService {
             databaseConnection.closeConnections(rs, stmt, connection);
         }
 
-        return Boolean.FALSE;
+        return null;
 
     }
 
@@ -111,6 +105,37 @@ public class UserService implements IUserService {
             databaseConnection.closeConnections(rs, stmt, connection);
         }
         return null;
+    }
+
+    @Override
+    public List<UserBankResponseDto> getAllUsers() {
+
+        try{
+            connection = databaseConnection.connect();
+            String sql = "SELECT * FROM user_bank WHERE profile = 'USER'";
+            stmt = connection.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            List<UserBankResponseDto> users = new ArrayList<>();
+            while (rs.next()) {
+                var user = UserBankResponseDto
+                        .builder()
+                        .id(rs.getString("id"))
+                        .names(rs.getString("names"))
+                        .userName(rs.getString("user_name"))
+                        .email(rs.getString("email"))
+                        .phone(rs.getString("phone"))
+                        .createdDate(rs.getDate("created_date"))
+                        .build();
+                users.add(user);
+            }
+            return users;
+        }catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            databaseConnection.closeConnections(rs, stmt, connection);
+        }
+        return null;
+
     }
 
 

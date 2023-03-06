@@ -17,6 +17,7 @@ import java.util.*;
 @Service
 public class TransferService implements ITransferService {
 
+    BigDecimal ZERO = new BigDecimal(0);
     Connection connection = null;
     PreparedStatement stmt = null;
     ResultSet rs = null;
@@ -60,12 +61,11 @@ public class TransferService implements ITransferService {
     }
 
     @Override
-    public void doTransfer(Transfer transfer) {
+    public String doTransfer(Transfer transfer) {
 
         try{
-            //TODO: It's missing sum the amount to the destination account and subtract to the origin account
-            //TODO: It's missing check the origin account balance
-            //TODO: It's missing check the overdraft_balance
+            checkBalanceFromOriginAccount(transfer.getOriginAccount(), new BigDecimal(transfer.getAmount()));
+            updateAmountToDestinationAccount(transfer.getDestinationAccount(), new BigDecimal(transfer.getAmount()));
             connection = databaseConnection.connect();
             StringBuilder sql = new StringBuilder("INSERT INTO transfer (id, origin_account, destination_account, amount, created_date)");
             sql.append(" VALUES (?,?,?,?,?)");
@@ -78,11 +78,13 @@ public class TransferService implements ITransferService {
             stmt.setBigDecimal(4, new BigDecimal(transfer.getAmount()));
             stmt.setDate(5, (java.sql.Date) sqlDate);
             stmt.executeUpdate();
+            return "Transfer completed successfully";
         }catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
             databaseConnection.closeConnections(rs, stmt, connection);
         }
+        return "there was an exception";
     }
 
 
@@ -97,4 +99,55 @@ public class TransferService implements ITransferService {
         }
         return null;
     }
+
+    private void checkBalanceFromOriginAccount(String originAccount, BigDecimal amount) throws Exception {
+
+        var balances = getAccountBalance(originAccount);
+        var balance = balances[0];
+        var overDraftBalance = balances[1];
+        var balanceOp = balance.subtract(amount);
+        var balanceAndOverDraftBalanceOp = (balance.add(overDraftBalance)).subtract(amount);
+        if (balanceOp.compareTo(ZERO) >= 0 ){
+            updateAccountBalance(originAccount, balance.subtract(amount), overDraftBalance);
+        }else if(balanceAndOverDraftBalanceOp.compareTo(ZERO) >= 0){
+            updateAccountBalance(originAccount, ZERO, balanceAndOverDraftBalanceOp);
+        }else {
+            throw new Exception("Transfer cannot be processed");
+        }
+    }
+
+    private void updateAmountToDestinationAccount(String destinationAccount, BigDecimal amount) throws Exception {
+
+        var balances = getAccountBalance(destinationAccount);
+        updateAccountBalance(destinationAccount, balances[0].add(amount), balances[1]);
+    }
+
+    private BigDecimal[] getAccountBalance(String accountId) throws SQLException {
+
+        String sql = "SELECT balance, overdraft_balance FROM account WHERE id = ?";
+        stmt = connection.prepareStatement(sql);
+        stmt.setString(1, accountId);
+        rs = stmt.executeQuery();
+        var balances = new BigDecimal[2];
+        while (rs.next()) {
+            var balance = new BigDecimal(rs.getString("balance"));
+            var overDraftBalance = new BigDecimal(rs.getString("overdraft_balance"));
+            balances[0] = balance;
+            balances[1] = overDraftBalance;
+        }
+        return balances;
+    }
+
+    private void updateAccountBalance(String originAccount,
+                                      BigDecimal newBalance,
+                                      BigDecimal newOverDraftBalance) throws Exception {
+
+        StringBuilder sql = new StringBuilder("UPDATE account SET balance = ?, overdraft_balance = ? WHERE id = ?");
+        stmt = connection.prepareStatement(sql.toString());
+        stmt.setString(1, newBalance.toString());
+        stmt.setString(2, newOverDraftBalance.toString());
+        stmt.setString(3, originAccount);
+        stmt.executeUpdate();
+    }
+
 }
