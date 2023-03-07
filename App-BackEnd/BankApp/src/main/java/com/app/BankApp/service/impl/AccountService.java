@@ -37,7 +37,7 @@ public class AccountService implements IAccountService {
                 throw new UnexpectedException("Unexpected error with query database");
             }
             StringBuilder sql = new StringBuilder("INSERT INTO account (id, user_bank_id, balance, overdraft_balance)");
-            sql.append(" VALUES (?,?,0,0");
+            sql.append(" VALUES (?,?,'0','0')");
             account_id += 1;
             stmt = connection.prepareStatement(sql.toString());
             stmt.setString(1, account_id.toString());

@@ -1,15 +1,13 @@
 package com.app.BankApp.controller;
 
-import com.app.BankApp.dto.UserBank;
-import com.app.BankApp.dto.UserBankResponseDto;
-import com.app.BankApp.dto.ValidateUserDto;
-import com.app.BankApp.dto.ValidateUserResponseDto;
+import com.app.BankApp.dto.*;
 import com.app.BankApp.service.api.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,8 +40,11 @@ public class UserController {
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody UserBank user){
 
-        userService.createUser(user);
-        return new ResponseEntity<>("User created", HttpStatus.OK);
+        String response = userService.createUser(user);
+        if (response.equals("There was an exception")){
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/totalBalance/{userId}")
@@ -56,5 +57,25 @@ public class UserController {
     public ResponseEntity<List<UserBankResponseDto>> getAllUsers() {
 
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    }
+
+    @PutMapping("/{userId}/account/balance")
+    public ResponseEntity<String> modifyBalance(@PathVariable String userId, @RequestBody ModifyBalanceDto modifyBalanceDto) {
+
+        String response = userService.modifyBalance(userId, modifyBalanceDto.getAccountId(), modifyBalanceDto.getAmount(), "BALANCE");
+        if (response.equals("There was an exception")){
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/{userId}/account/overdraft")
+    public ResponseEntity<String> modifyOverdraftBalance(@PathVariable String userId, @RequestBody ModifyBalanceDto modifyBalanceDto) {
+
+        String response = userService.modifyBalance(userId, modifyBalanceDto.getAccountId(), modifyBalanceDto.getAmount(), "OVERDRAFT");
+        if (response.equals("There was an exception")){
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

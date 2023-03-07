@@ -46,7 +46,7 @@ public class TransferService implements ITransferService {
                         .id(rs.getString("id"))
                         .originAccount(rs.getString("origin_account"))
                         .destinationAccount(rs.getString("destination_account"))
-                        .amount(rs.getString("amount"))
+                        .amount(rs.getBigDecimal("amount"))
                         .createdDate(rs.getDate("created_date"))
                         .build());
             }
@@ -64,9 +64,12 @@ public class TransferService implements ITransferService {
     public String doTransfer(Transfer transfer) {
 
         try{
-            checkBalanceFromOriginAccount(transfer.getOriginAccount(), new BigDecimal(transfer.getAmount()));
-            updateAmountToDestinationAccount(transfer.getDestinationAccount(), new BigDecimal(transfer.getAmount()));
+            if (transfer.getAmount().compareTo(ZERO) <= 0){
+                throw new Exception("Amount must be greater than 0");
+            }
             connection = databaseConnection.connect();
+            checkBalanceFromOriginAccount(transfer.getOriginAccount(), transfer.getAmount());
+            updateAmountToDestinationAccount(transfer.getDestinationAccount(), transfer.getAmount());
             StringBuilder sql = new StringBuilder("INSERT INTO transfer (id, origin_account, destination_account, amount, created_date)");
             sql.append(" VALUES (?,?,?,?,?)");
             Date currentDate = new java.util.Date();
@@ -75,7 +78,7 @@ public class TransferService implements ITransferService {
             stmt.setString(1, UUID.randomUUID().toString());
             stmt.setString(2,transfer.getOriginAccount());
             stmt.setString(3,transfer.getDestinationAccount());
-            stmt.setBigDecimal(4, new BigDecimal(transfer.getAmount()));
+            stmt.setBigDecimal(4, transfer.getAmount());
             stmt.setDate(5, (java.sql.Date) sqlDate);
             stmt.executeUpdate();
             return "Transfer completed successfully";
@@ -130,8 +133,8 @@ public class TransferService implements ITransferService {
         rs = stmt.executeQuery();
         var balances = new BigDecimal[2];
         while (rs.next()) {
-            var balance = new BigDecimal(rs.getString("balance"));
-            var overDraftBalance = new BigDecimal(rs.getString("overdraft_balance"));
+            var balance = rs.getBigDecimal("balance");
+            var overDraftBalance = rs.getBigDecimal("overdraft_balance");
             balances[0] = balance;
             balances[1] = overDraftBalance;
         }
@@ -144,8 +147,8 @@ public class TransferService implements ITransferService {
 
         StringBuilder sql = new StringBuilder("UPDATE account SET balance = ?, overdraft_balance = ? WHERE id = ?");
         stmt = connection.prepareStatement(sql.toString());
-        stmt.setString(1, newBalance.toString());
-        stmt.setString(2, newOverDraftBalance.toString());
+        stmt.setBigDecimal(1, newBalance);
+        stmt.setBigDecimal(2, newOverDraftBalance);
         stmt.setString(3, originAccount);
         stmt.executeUpdate();
     }

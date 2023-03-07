@@ -9,6 +9,7 @@ import com.app.BankApp.service.api.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.rmi.UnexpectedException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.Objects;
 @Service
 public class UserService implements IUserService {
 
+    BigDecimal ZERO = new BigDecimal(0);
     Connection connection = null;
     PreparedStatement stmt = null;
     ResultSet rs = null;
@@ -58,14 +60,15 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void createUser(UserBank user) {
+    public String createUser(UserBank user) {
 
         try{
+            connection = databaseConnection.connect();
+            checkUserExistence(user.getId(), user.getUserName());
             String account_id = accountService.createAccount(user.getId());
             if (Objects.isNull(account_id)){
                 throw new UnexpectedException("Unexpected error with query database");
             }
-            connection = databaseConnection.connect();
             StringBuilder sql = new StringBuilder("INSERT INTO user_bank (id, names, user_name, password, email, phone, account_id, profile, created_date)");
             sql.append(" VALUES (?,?,?,?,?,?,?,'USER',?)");
             Date currentDate = new java.util.Date();
@@ -80,11 +83,13 @@ public class UserService implements IUserService {
             stmt.setString(7,account_id);
             stmt.setDate(8, (java.sql.Date) sqlDate);
             stmt.executeUpdate();
+            return("User created");
         }catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
             databaseConnection.closeConnections(rs, stmt, connection);
         }
+        return ("There was an exception");
     }
 
     @Override
@@ -136,6 +141,60 @@ public class UserService implements IUserService {
         }
         return null;
 
+    }
+
+    @Override
+    public String modifyBalance(String userId, String accountId, String amount, String type) {
+
+        try{
+            connection = databaseConnection.connect();
+            var newBalance = new BigDecimal(amount);
+            if (newBalance.compareTo(ZERO) <= 0){
+                throw new Exception("New balance must be greater than 0");
+            }
+            checkAccountOwnership(userId, accountId);
+            String sql;
+            if (type.equals("BALANCE")){
+                sql = "UPDATE account SET balance = ? WHERE id = ?";
+            } else {
+                sql = "UPDATE account SET overdraft_balance = ? WHERE id = ?";
+            }
+            stmt = connection.prepareStatement(sql);
+            stmt.setBigDecimal(1, newBalance);
+            stmt.setString(2, accountId);
+            stmt.executeUpdate();
+            return "Amount modified";
+        }catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            databaseConnection.closeConnections(rs, stmt, connection);
+        }
+        return "There was an exception";
+    }
+
+    private void checkAccountOwnership(String userId, String accountId) throws Exception{
+
+        String sql = "SELECT * FROM user_bank WHERE id = ?";
+        stmt = connection.prepareStatement(sql);
+        stmt.setString(1, userId);
+        rs = stmt.executeQuery();
+        while (rs.next()) {
+            if (!rs.getString("account_id").equals(accountId)){
+                throw new Exception("The account does not belong to the given user");
+            }
+        }
+    }
+
+    private void checkUserExistence(String userId, String userName) throws Exception {
+
+        String sql = "SELECT * FROM user_bank WHERE id = ? or user_name = ?";
+        stmt = connection.prepareStatement(sql);
+        stmt.setString(1,userId);
+        stmt.setString(2, userName);
+        rs = stmt.executeQuery();
+        while (rs.next()) {
+            throw new Exception("User already exist");
+        }
     }
 
 

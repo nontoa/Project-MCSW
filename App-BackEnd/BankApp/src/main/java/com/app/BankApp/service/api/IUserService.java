@@ -10,9 +10,11 @@ public interface IUserService {
 
     String isValidUser(ValidateUserDto user);
 
-    void createUser(UserBank user);
+    String createUser(UserBank user);
 
     String getTotalBalance(String userId);
 
     List<UserBankResponseDto> getAllUsers();
+
+    String modifyBalance(String userId, String accountId, String amount, String type);
 }
