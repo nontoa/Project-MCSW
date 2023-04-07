@@ -35,20 +35,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </style>
     <body>
         <div class="contenedor">
-        <h2>Bienvenido al Banco de Ingenieros</h2>
-
-        <form action="/BancoAdmin">
-            <label for="fname">First name:</label><br>
-            <input type="text" id="fname" name="fname" value="Admin"><br>
-            <label for="lname">Password:</label><br>
-            <input type="text" id="lname" name="lname" value="123456"><br><br>
-            <input type="submit" value="Submit">
-        </form> 
-
+            <h2>Bienvenido al Banco de Ingenieros</h2>
+           <!-- <ol id="fetch"></ol>-->
+            <form id= "login-form" >   
+                <label for="fname">First name:</label><br>
+                <input type="text" id="fname" name="fname" value=""><br>
+                <label for="passID">Password:</label><br>
+                <input type="password" id="passID" name="passID" value=""><br><br>
+                <button type="submit" >Iniciar sesión</button>
+            </form> 
+            <div id="login-message"></div>
+            <!--<script src="app.js"></script>-->
         </div>
+     <script src="./app.js"> </script>
 
 
-    </body>
-</html>
+    </body>        
+    </html>
 
 

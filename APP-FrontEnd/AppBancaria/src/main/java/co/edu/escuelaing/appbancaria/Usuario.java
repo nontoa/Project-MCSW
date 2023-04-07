@@ -53,17 +53,20 @@ public class Usuario {
                               <div class="w3-display-container">
                                 <div class="w3-display-topleft w3-black w3-padding">Ver movimientos</div>
                                 <img src="VerMovimiento.jpg" alt="House" style="width:100%">
-                                <p><button class="w3-button w3-light-grey w3-block">Ver</button></p>
+                                <p><form method="get" action="/Movimientos">
+                                <p><button type="submit" id= "1" class="w3-button w3-light-grey w3-block">Ver movimientos</button></form></p>
                               </div>
                               </div>
                               
                               <div class="w3-col l3 m6 w3-margin-bottom">
-                              <div class="w3-display-container">
+                              <div class="w3-display-container"> 
                                 <div class="w3-display-topleft w3-black w3-padding">Ver Saldo</div>
                                 <img src="Saldo.jpg" alt="House" style="width:100%">
-                                <p><button class="w3-button w3-light-grey w3-block">Ver</button></p>
+                                <p><form method="get" action="/Saldo">
+                                <p><button type="submit" id= "2" class="w3-button w3-light-grey w3-block">Ver saldo</button></form></p>
                               </div>
                               </div>
+                              
                              
                               <!-- About -->
                               <div id="about" class="w3-container w3-padding-32">
@@ -73,29 +76,22 @@ public class Usuario {
                               Por favor proceda con cautela. Si tiene alguna dificultad, no dude en contactarnos.
                               </p>
                               </div>
-                              
-                              <div class="w3-row-padding w3-grayscale">
-                              
-                              <div class="w3-col l3 m6 w3-margin-bottom">
-                              <img src="Aceptar.jpg" alt="John" style="width:100%">
-                              <h3>Recibir transacción</h3>
-                              
-                              <p>Acepte transacciones y transferencias. Por su seguridad tenga su contraseña presente.</p>
-                              <p><button class="w3-button w3-light-grey w3-block">Aceptar</button></p>
-                              </div>
-                              
+                
                               <div class="w3-col l3 m6 w3-margin-bottom">
                               <img src="Sobregiro.jpg" alt="Jane" style="width:100%">
                               <h3>Solicitar Sobregiros</h3>
                               <p>Acceda a este enlace para solicitar sobregiros a sus cuentas corrientes.</p>
                               <p><button class="w3-button w3-light-grey w3-block">Solicitar</button></p>
                               </div>
+               
+               
                               
                               <div class="w3-col l3 m6 w3-margin-bottom">
                               <img src="Enviar.jpg" alt="Mike" style="width:100%">
                               <h3>Enviar dinero</h3>
                               <p>Ingrese a este apartado para enviar dinero desde su cuenta.</p>
-                              <p><button class="w3-button w3-light-grey w3-block">Enviar</button></p>
+                              <p><form method="get" action="/Enviar">
+                              <p><button type="submit" class="w3-button w3-light-grey w3-block">Aceptar</button></form></p>
                               </div>
                               
                              

@@ -53,6 +53,8 @@ public class BankControl {
                <div class="w3-display-container">
                  <div class="w3-display-topleft w3-black w3-padding">Crear usuario</div>
                  <img src="CrearUsuario.jpg" alt="House" style="width:100%">
+               <p><form method="get" action="/Creator">
+               <p><button type="submit" class="w3-button w3-light-grey w3-block">Creator</button></form></p>
                </div>
                </div>
                
@@ -71,17 +73,23 @@ public class BankControl {
                <div class="w3-col l3 m6 w3-margin-bottom">
                <img src="ModificarMonto.jpg" alt="John" style="width:100%">
                <h3>Modificar dinero de usuario</h3>
-               
                <p>Acceda para reponer valores en cuentas de usuarios, modificar saldos y ver detalles.</p>
-               <p><button class="w3-button w3-light-grey w3-block">Modificar</button></p>
+               <p><form method="get" action="/Modificar">
+               <p><button type="submit" class="w3-button w3-light-grey w3-block">Modificar</button></form></p>
                </div>
+               
+               
+               
                
                <div class="w3-col l3 m6 w3-margin-bottom">
                <img src="Sobregiro.jpg" alt="Jane" style="width:100%">
                <h3>Autorizar Sobregiros</h3>
                <p>Acceda a este enlace para avalar sobregiros de los clientes con cuentas corrientes.</p>
-               <p><button class="w3-button w3-light-grey w3-block">Autorizar</button></p>
+               <p><form method="get" action="/Sobregiro">
+               <p><button type="submit" class="w3-button w3-light-grey w3-block">Autorizar</button></form></p>
                </div>
+               
+               
                
                <div class="w3-col l3 m6 w3-margin-bottom">
                <img src="Transferencia.jpg" alt="Mike" style="width:100%">

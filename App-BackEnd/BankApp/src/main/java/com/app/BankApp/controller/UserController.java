@@ -26,7 +26,7 @@ public class UserController {
             return new ResponseEntity<>(ValidateUserResponseDto
                     .builder()
                     .authentication("Valid")
-                    .rol(profileUser)
+                    .rol(profileUser)     
                     .build(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(ValidateUserResponseDto

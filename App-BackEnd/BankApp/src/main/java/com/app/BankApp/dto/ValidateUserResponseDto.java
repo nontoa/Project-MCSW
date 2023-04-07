@@ -9,5 +9,8 @@ public class ValidateUserResponseDto {
 
     private String authentication;
     private String rol;
+    
 
+    
+    
 }

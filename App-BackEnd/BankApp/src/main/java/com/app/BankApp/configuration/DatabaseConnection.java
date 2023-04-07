@@ -9,9 +9,9 @@ import java.sql.*;
 @Configuration
 public class DatabaseConnection {
 
-    String url = "jdbc:postgresql://localhost:5432/bankapp";
-    String user = "postgres";
-    String password = "postgres";
+    String url = "jdbc:postgresql://localhost:5432/BankApp";
+    String user = "postgres2";
+    String password = "postgres2";
 
     public Connection connect() throws ClassNotFoundException, SQLException {
 

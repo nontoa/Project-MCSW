@@ -55,8 +55,21 @@ public class Auditor {
                                             <img src="Transferencia.jpg" alt="Mike" style="width:100%">
                                             <h3>Detalle de transferencias</h3>
                                             <p>Ingrese a este apartado para verificar el detalle de transferencias y otros movientos.</p>
-                                            <p><button class="w3-button w3-light-grey w3-block">Ver</button></p>
+                                            <p><form method="get" action="/Movimientos">
+                                            <p><button class="w3-button w3-light-grey w3-block">Ver</button></form></p>
                                             </div>     
+               
+                                                          <div class="w3-col l3 m6 w3-margin-bottom">
+                                                           <img src="CrearUsuario.jpg" alt="Mike" style="width:100%">
+                                                           <h3>Información de Usuario</h3>
+                                                           <p>Ingrese a este apartado para verificar la información de cada usuario.</p>
+                                                           <p><form method="get" action="/AudiDetalles">
+                                                           <p><button class="w3-button w3-light-grey w3-block">Ver</button></form></p>
+                                                           </div>
+               
+               
+               
+               
                
                               <!-- Contact Section -->
                               <div id="contact" class="w3-container w3-padding-top-32">
