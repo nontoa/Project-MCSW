@@ -4,9 +4,11 @@ import com.app.BankApp.configuration.DatabaseConnection;
 import com.app.BankApp.dto.UserBank;
 import com.app.BankApp.dto.UserBankResponseDto;
 import com.app.BankApp.dto.ValidateUserDto;
+import com.app.BankApp.dto.ValidateUserResponseDto;
 import com.app.BankApp.service.api.IAccountService;
 import com.app.BankApp.service.api.IUserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -37,7 +39,7 @@ public class UserService implements IUserService {
 
 
     @Override
-    public String isValidUser(ValidateUserDto user) {
+    public ValidateUserResponseDto isValidUser(ValidateUserDto user) {
 
         try{
             connection = databaseConnection.connect();
@@ -47,7 +49,12 @@ public class UserService implements IUserService {
             stmt.setString(2,user.getPassword());
             rs = stmt.executeQuery();
             while (rs.next()) {
-                return rs.getString("profile");
+                return ValidateUserResponseDto
+                        .builder()
+                        .authentication("Valid")
+                        .rol(rs.getString("profile"))
+                        .accountId(rs.getString("account_id"))
+                        .build();
             }
         }catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -55,7 +62,10 @@ public class UserService implements IUserService {
             databaseConnection.closeConnections(rs, stmt, connection);
         }
 
-        return null;
+        return ValidateUserResponseDto
+                .builder()
+                .authentication("Invalid")
+                .build();
 
     }
 

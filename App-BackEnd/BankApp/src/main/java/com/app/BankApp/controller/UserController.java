@@ -21,19 +21,11 @@ public class UserController {
     @PostMapping("/authentication")
     public ResponseEntity<ValidateUserResponseDto> validateUser(@RequestBody ValidateUserDto user){
 
-        var profileUser = userService.isValidUser(user);
-        if (Objects.nonNull(profileUser)) {
-            return new ResponseEntity<>(ValidateUserResponseDto
-                    .builder()
-                    .authentication("Valid")
-                    .rol(profileUser)     
-                    .build(), HttpStatus.OK);
+        var authenticatedUser = userService.isValidUser(user);
+        if (Objects.nonNull(authenticatedUser.getAuthentication().equals("Valid"))) {
+            return new ResponseEntity<>(authenticatedUser, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(ValidateUserResponseDto
-                    .builder()
-                    .authentication("Invalid")
-                    .rol(null)
-                    .build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(authenticatedUser, HttpStatus.BAD_REQUEST);
         }
     }
 
