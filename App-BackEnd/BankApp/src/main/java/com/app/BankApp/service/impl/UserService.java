@@ -5,14 +5,16 @@ import com.app.BankApp.dto.UserBank;
 import com.app.BankApp.dto.UserBankResponseDto;
 import com.app.BankApp.dto.ValidateUserDto;
 import com.app.BankApp.dto.ValidateUserResponseDto;
+import com.app.BankApp.dto.constants.UserRol;
 import com.app.BankApp.service.api.IAccountService;
 import com.app.BankApp.service.api.IUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.rmi.UnexpectedException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,13 +48,13 @@ public class UserService implements IUserService {
             String sql = "SELECT * FROM user_bank WHERE user_name = ? and password = ?";
             stmt = connection.prepareStatement(sql);
             stmt.setString(1,user.getUserName());
-            stmt.setString(2,user.getPassword());
+            stmt.setString(2,getHashPassword(user.getPassword()));
             rs = stmt.executeQuery();
             while (rs.next()) {
                 return ValidateUserResponseDto
                         .builder()
                         .authentication("Valid")
-                        .rol(rs.getString("profile"))
+                        .rol(UserRol.valueOf(rs.getString("profile")))
                         .accountId(rs.getString("account_id"))
                         .build();
             }
@@ -75,23 +77,27 @@ public class UserService implements IUserService {
         try{
             connection = databaseConnection.connect();
             checkUserExistence(user.getId(), user.getUserName());
-            String account_id = accountService.createAccount(user.getId());
-            if (Objects.isNull(account_id)){
-                throw new UnexpectedException("Unexpected error with query database");
+            String account_id = null;
+            if (user.getRol().equals(UserRol.USER)){
+                account_id = accountService.createAccount(user.getId());
+                if (Objects.isNull(account_id)){
+                    throw new UnexpectedException("Unexpected error with query database");
+                }
             }
             StringBuilder sql = new StringBuilder("INSERT INTO user_bank (id, names, user_name, password, email, phone, account_id, profile, created_date)");
-            sql.append(" VALUES (?,?,?,?,?,?,?,'USER',?)");
+            sql.append(" VALUES (?,?,?,?,?,?,?,?,?)");
             Date currentDate = new java.util.Date();
             Date sqlDate = new java.sql.Date(currentDate.getTime());
             stmt = connection.prepareStatement(sql.toString());
             stmt.setString(1,user.getId());
             stmt.setString(2,user.getNames());
             stmt.setString(3,user.getUserName());
-            stmt.setString(4,user.getPassword());
+            stmt.setString(4,getHashPassword(user.getPassword()));
             stmt.setString(5,user.getEmail());
             stmt.setString(6,user.getPhone());
             stmt.setString(7,account_id);
-            stmt.setDate(8, (java.sql.Date) sqlDate);
+            stmt.setString(8,user.getRol().toString());
+            stmt.setDate(9, (java.sql.Date) sqlDate);
             stmt.executeUpdate();
             return("User created");
         }catch (Exception e) {
@@ -207,5 +213,17 @@ public class UserService implements IUserService {
         }
     }
 
+    private String getHashPassword(final String password) throws NoSuchAlgorithmException {
+
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] passwordBytes = password.getBytes();
+        byte[] hashBytes = md.digest(passwordBytes);
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hashBytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+
+    }
 
 }
