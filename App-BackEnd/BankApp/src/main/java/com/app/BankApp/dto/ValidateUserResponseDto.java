@@ -21,7 +21,7 @@ public class ValidateUserResponseDto {
     public ValidateUserResponseDto(@JsonProperty("authentication") String authentication,
                                    @JsonProperty("rol") UserRol rol,
                                    @JsonProperty("accountId") String accountId,
-                                   @JsonProperty("accountId") String userId) {
+                                   @JsonProperty("userId") String userId) {
 
         this.authentication = authentication;
         this.rol = rol;
