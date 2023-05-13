@@ -56,6 +56,7 @@ public class UserService implements IUserService {
                         .authentication("Valid")
                         .rol(UserRol.valueOf(rs.getString("profile")))
                         .accountId(rs.getString("account_id"))
+                        .userId(rs.getString("id"))
                         .build();
             }
         }catch (Exception e) {
