@@ -27,11 +27,11 @@ form.addEventListener('submit', (event) => {
                 if (data.authentication === 'Valid') {
 
                     message.textContent = 'Inicio de sesión exitoso';
-                    if (fname === 'user1' && passID === 'user1' ) {
+                    if (data.rol === 'ADMIN') {
 
                         window.location.replace("/BancoAdmin");
 
-                    } else if (fname === 'user4' && passID === 'user4' ) {
+                    } else if (data.rol === 'AUDITOR') {
 
                         window.location.replace("/BancoAuditor");
 
