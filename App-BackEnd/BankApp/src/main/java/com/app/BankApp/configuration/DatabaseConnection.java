@@ -1,6 +1,7 @@
 package com.app.BankApp.configuration;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import java.sql.*;
@@ -9,9 +10,14 @@ import java.sql.*;
 @Configuration
 public class DatabaseConnection {
 
-    String url = "jdbc:postgresql://localhost:5432/BankApp";
-    String user = "postgres2";
-    String password = "postgres2";
+    @Value("${database.url}")
+    private String url;
+
+    @Value("${database.user}")
+    private String user;
+
+    @Value("${database.password}")
+    private String password;
 
     public Connection connect() throws ClassNotFoundException, SQLException {
 
