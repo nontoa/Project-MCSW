@@ -1,7 +1,3 @@
-
-
-
-
 const form = document.querySelector('#login-form');
 const message = document.querySelector('#login-message');
 form.addEventListener('submit', (event) => {
@@ -28,7 +24,8 @@ form.addEventListener('submit', (event) => {
 
 
                     const autorizacion = {
-                        accountId: data.accountId
+                        accountId: data.accountId,
+                        userId: data.userId
                     };
                     
                     localStorage.setItem('autorizacion', JSON.stringify(autorizacion));
@@ -61,3 +58,6 @@ form.addEventListener('submit', (event) => {
             });
 
 });
+
+
+

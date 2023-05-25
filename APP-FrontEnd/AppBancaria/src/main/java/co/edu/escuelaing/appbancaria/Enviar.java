@@ -15,8 +15,7 @@ public class Enviar {
                
                
                <form>
-                 <label for="origen">Cuenta origen:</label>
-                 <input type="text" id="origen" name="origen">
+                
                
                  <label for="destino">Cuenta destino:</label>
                  <input type="text" id="destino" name="destino">
@@ -27,12 +26,13 @@ public class Enviar {
                  
                
                  <button onclick="enviarDinero()">Enviar Dinero</button>
-                 
+                
+               
                </form>
                
                 
                             <script src="./EnviarScript.js"> </script>
-               
+                           
                
                               </body>
                               </html>

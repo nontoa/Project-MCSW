@@ -25,6 +25,7 @@ public class BankControl {
                <a href="#projects" class="w3-bar-item w3-button">Gestión de usuarios</a>
                <a href="#about" class="w3-bar-item w3-button">Gestión transaccional</a>
                <a href="#contact" class="w3-bar-item w3-button">Soporte técnico</a>
+               <a id="cerrar" href="#contact" class="w3-bar-item w3-button">Cerrar sesión</a>
                </div>
                </div>
                
@@ -95,7 +96,8 @@ public class BankControl {
                <img src="Transferencia.jpg" alt="Mike" style="width:100%">
                <h3>Detalle de transferencias</h3>
                <p>Ingrese a este apartado para verificar el detalle de transferencias y otros movientos.</p>
-               <p><button class="w3-button w3-light-grey w3-block">Ver</button></p>
+               <p><form method="get" action="/TransferAdmin">
+               <p><button class="w3-button w3-light-grey w3-block">Ver transferencias</button></form></p>
                </div>
                
               
@@ -127,7 +129,7 @@ public class BankControl {
                
                <!-- End page content -->
                </div>
-               
+               <script src="./cerrarSesion.js"> </script>
                </body>
                </html>""";
 

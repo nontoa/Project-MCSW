@@ -25,6 +25,7 @@ public class Usuario {
                               <a href="#projects" class="w3-bar-item w3-button">Mi cuenta</a>
                               <a href="#about" class="w3-bar-item w3-button">Gestión transaccional</a>
                               <a href="#contact" class="w3-bar-item w3-button">Soporte técnico</a>
+                              <a id="cerrar" href="#contact" class="w3-bar-item w3-button">Cerrar sesión</a>
                               </div>
                               </div>
                               
@@ -76,16 +77,8 @@ public class Usuario {
                               Por favor proceda con cautela. Si tiene alguna dificultad, no dude en contactarnos.
                               </p>
                               </div>
-                
-                              <div class="w3-col l3 m6 w3-margin-bottom">
-                              <img src="Sobregiro.jpg" alt="Jane" style="width:100%">
-                              <h3>Solicitar Sobregiros</h3>
-                              <p>Acceda a este enlace para solicitar sobregiros a sus cuentas corrientes.</p>
-                              <p><button class="w3-button w3-light-grey w3-block">Solicitar</button></p>
-                              </div>
-               
-               
-                              
+    
+       
                               <div class="w3-col l3 m6 w3-margin-bottom">
                               <img src="Enviar.jpg" alt="Mike" style="width:100%">
                               <h3>Enviar dinero</h3>
@@ -123,7 +116,7 @@ public class Usuario {
                               
                               <!-- End page content -->
                               </div>
-                              
+                               <script src="./cerrarSesion.js"> </script>
                               </body>
                               </html>""";
 

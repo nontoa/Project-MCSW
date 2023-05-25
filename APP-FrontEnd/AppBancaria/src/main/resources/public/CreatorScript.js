@@ -10,6 +10,7 @@ function crearUsuario() {
         const passW = document.getElementById('password').value;        
         const email = document.getElementById('email').value;   
         const phone = document.getElementById('phone').value;
+        const rol= document.getElementById('rol').value;
         // Crear un objeto con los datos del usuario
         const usuario = {
             
@@ -18,7 +19,8 @@ function crearUsuario() {
                 username :username,
                 password : passW,
                 email: email,
-                phone : phone
+                phone : phone,
+                rol: rol
                 
         };
         // Enviar la petición al servidor en formato JSON

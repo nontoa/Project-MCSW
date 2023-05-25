@@ -1,17 +1,20 @@
-
+let jsonString = localStorage.getItem('autorizacion');
+const autorizacion = JSON.parse(jsonString);
+console.log(autorizacion);
+const accountId = autorizacion.accountId;
 
 
 
 function enviarDinero() {
   // Capturar los datos del formulario
-  const origen = document.getElementById('origen').value;
+  
   const destino = document.getElementById('destino').value;
   const monto = document.getElementById('monto').value;
   
 
   // Crear un objeto con los datos de los alimentos
   const dinero = {
-    originAccount: origen,
+    originAccount: accountId,
     destinationAccount: destino,
     amount: monto
     

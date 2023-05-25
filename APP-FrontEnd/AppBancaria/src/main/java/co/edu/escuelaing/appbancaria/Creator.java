@@ -37,6 +37,9 @@ public class Creator {
                  <label for="phone">Número celular:</label>
                  <input type="phone" id="phone" name="phone">
                
+                 <label for="rol">Rol de usuario:</label>
+                 <input type="rol" id="rol" name="rol">
+               
                  <button onclick="crearUsuario()">Crear usuario</button>
                </form>
                

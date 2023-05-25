@@ -1,8 +1,8 @@
 let jsonString = localStorage.getItem('autorizacion');
 const autorizacion = JSON.parse(jsonString);
 console.log(autorizacion);
-//const accountId = autorizacion.accountId;
-const accountId = 12345678901;
+const accountId = autorizacion.userId;
+
 
 //function consultarMovimientos() {
 
@@ -16,7 +16,7 @@ fetch(url)
             var movimientos = data;
             const movimientosHTML = document.getElementById("movimientos");
             console.log(movimientosHTML);
-            movimientosHTML.textContent = `Los movimientos de la cuenta ${accountId}`;
+            movimientosHTML.textContent = `Los movimientos del usuario son ${accountId}`;
 
             movimientos.map(movimiento => {
 
@@ -83,5 +83,4 @@ fetch(url)
             console.error(error);
             document.getElementById("movimientos").textContent = "Ocurrió un error al consultar el saldo de la cuenta.";
         });
-//}
 
