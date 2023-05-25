@@ -1,5 +1,6 @@
 HELP.md
-target/
+App-BackEnd/BankApp/target/
+App-FrontEnd/AppBancaria/target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
